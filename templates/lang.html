@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ language["name"] }}</h1>
+
+
+{% for log in logs %}
+  <div class="card">
+
+    📅 {{ log["date"] }} <br>
+    ⏱ {{ log["hours"] }} hours <br>
+    📝 {{ log["notes"] }}
+
+    <br><br>
+
+    <a href="{{ url_for('delete_log', log_id=log['id']) }}"
+       onclick="return confirm('Delete this log?')"
+       style="color: red;">
+       Delete
+    </a>
+
+  </div>
+{% endfor %}
+
+{% endblock %}
