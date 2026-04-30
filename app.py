@@ -1,7 +1,14 @@
 from flask import Flask, render_template, request, redirect
+from flask_login import LoginManager
+import secrets
+
 import sqlite3
 
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
 
 
 @app.route("/")
