@@ -3,35 +3,29 @@
 {% block content %}
 
 <h1>Add Log</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
 
-<form method="POST" class="card">
+    <p>
+        {{ form.hours.label }}<br>
+        {{ form.hours() }}
+    </p>
 
-    <label>Language</label>
-    <select name="lang_id" required>
-        {% for lang in languages %}
-            <option value="{{ lang['id'] }}">{{ lang['name'] }}</option>
-        {% endfor %}
-    </select>
+    <p>
+        {{ form.topic.label }}<br>
+        {{ form.topic() }}
+    </p>
 
-    <br><br>
+    <p>
+        {{ form.new_topic.label }}<br>
+        {{ form.new_topic() }}
+    </p>
 
-    <label>Hours</label>
-    <input type="number" step="0.1" name="hours" required>
+    <p>
+        {{ form.context.label }}<br>
+        {{ form.context() }}
+    </p>
 
-    <br><br>
-
-    <label>Date</label>
-    <input type="date" name="date" required>
-
-    <br><br>
-
-    <label>Notes</label>
-    <textarea name="notes" placeholder="What did you practice?"></textarea>
-
-    <br><br>
-
-    <button type="submit">Add Log</button>
-
-</form>
+    {{ form.submit() }}
 
 {% endblock %}

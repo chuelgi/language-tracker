@@ -1,12 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1>Add Language</h1>
+<h1>Add Topic</h1>
 
 <form method="POST">
-    <input name="name" placeholder="Language name">
-    <button type="submit">Add</button>
+    {{ form.hidden_tag() }}
+
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name() }}
+    </p>
+
+    <p>
+        {{ form.submit() }}
+    </p>
+
 </form>
+
 
 {% endblock %}
