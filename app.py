@@ -19,6 +19,8 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+
+
 @app.route("/")
 def index():
     #all topics
@@ -56,7 +58,7 @@ def add_log():
             topic = Topic.query.get(form.topic.data)
 
         new_log = Log(
-            hours=form.hours.data,
+            hours=form.duration.data,
             context=form.context.data,
             user_id=1,
             topic_id=1)
