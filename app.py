@@ -74,13 +74,21 @@ def register():
 @app.route("/")
 def index():
     #all topics
-
-    topics = Topic.query.all()
+    if current_user.is_authenticated:
+        topics = (
+            db.session.query(Topic)
+            .join(Log)
+            .filter(Log.user_id == current_user.id)
+            .distinct()
+            .all()
+        )
+    else:
+        topics = Topic.query.all()
 
     return render_template("dashboard.html", topics=topics)
 
-
 @app.route("/add-language", methods=["GET", "POST"])
+@login_required
 def add_language():
     form =TopicForm()
     if form.validate_on_submit():
@@ -109,7 +117,7 @@ def add_log():
             topic = Topic.query.get(form.topic.data)
 
         new_log = Log(
-            hours=form.duration.data,
+            duration=form.duration.data,
             context=form.context.data,
             user_id=current_user.id,
             topic_id=topic.id)
@@ -123,7 +131,8 @@ def add_log():
 
 @app.route("/logs")
 def show_logs():
-    logs = Log.query.all()
+
+    logs = Log.query.filter_by(user_id = current_user.id)
 
     return render_template("logs.html", logs=logs)
 
@@ -132,10 +141,15 @@ def delete_log(log_id):
 
     return redirect("/")
 
-@app.route("/lang/<int:lang_id>")
-def lang(lang_id):
-    topic = Topic.query.get(lang_id)
-    logs = Log.query.filter(Log.topic_id == topic.id).all()
+@app.route("/topic/<int:topic_id>")
+@login_required
+def get_topic_logs(topic_id):
+    topic = Topic.query.get_or_404(topic_id)
+
+    logs = Log.query.filter_by(
+        topic_id=topic_id,
+        user_id=current_user.id
+    ).all()
 
     return render_template("lang.html", topic = topic, logs=logs)
 

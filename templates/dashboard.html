@@ -2,22 +2,26 @@
 
 {% block content %}
 
-<h1> Dashboard</h1>
+<h1> Topics users are studying:</h1>
 {% if current_user.is_authenticated %}
-<p> welcome {{ current_user.username }}</p>
-    <a href="{{ url_for('logout') }}">Logout</a>
+    <p> welcome {{ current_user.username }}</p>
+    <ul>
+    {% for topic in topics %}
+        <li>
+            <a href="{{ url_for('get_topic_logs', topic_id=topic.id) }}">
+                {{ topic.name }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
 {% else %}
-    <a href="{{ url_for('login') }}">Login</a>
-    <a href="{{ url_for('register') }}">Register</a>
-{% endif %}
 <ul>
-{% for topic in topics %}
+    {% for topic in topics %}
     <li>
-        <a href="{{ url_for('lang',lang_id = topic.id) }}">
-            {{ topic.name }}
-        </a>
+        {{ topic.name }}
     </li>
     {% endfor %}
 </ul>
-
+{% endif %}
 {% endblock %}
