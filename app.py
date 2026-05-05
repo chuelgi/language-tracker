@@ -4,14 +4,10 @@ import os
 
 from flask_login import LoginManager, login_user, logout_user, login_required
 from flask_login import current_user
-from jinja2.compiler import generate
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
-from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField
-from wtforms.validators import DataRequired
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, redirect
 from db import db
 from forms import TopicForm, LogForm,RegistrationForm, LoginForm
 app = Flask(__name__)
@@ -20,10 +16,17 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 db_url = os.getenv("DATABASE_URL")
 
+#for local testing
+if not db_url:
+    db_url = "sqlite:///study-tracker.db"
+
+#render
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+
+
 db.init_app(app)
 
 
@@ -33,6 +36,8 @@ from models import Topic, Log, User
 
 with app.app_context():
     db.create_all()
+
+
 #flask login
 login_manager = LoginManager()
 login_manager.login_view = "login"
