@@ -26,6 +26,8 @@ if db_url and db_url.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 db.init_app(app)
 
+print("DB URL:", db_url)
+
 from models import Topic, Log, User
 #flask login
 login_manager = LoginManager()
