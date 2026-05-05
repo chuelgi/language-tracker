@@ -12,7 +12,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField
 from wtforms.validators import DataRequired
 from flask import Flask, render_template, request, redirect
-from models import Topic, Log, User
 from db import db
 from forms import TopicForm, LogForm,RegistrationForm, LoginForm
 app = Flask(__name__)
@@ -27,6 +26,7 @@ if db_url and db_url.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 db.init_app(app)
 
+from models import Topic, Log, User
 #flask login
 login_manager = LoginManager()
 login_manager.login_view = "login"
