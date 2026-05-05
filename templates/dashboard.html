@@ -3,7 +3,13 @@
 {% block content %}
 
 <h1> Dashboard</h1>
-
+{% if current_user.is_authenticated %}
+<p> welcome {{ current_user.username }}</p>
+    <a href="{{ url_for('logout') }}">Logout</a>
+{% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register') }}">Register</a>
+{% endif %}
 <ul>
 {% for topic in topics %}
     <li>

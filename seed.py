@@ -1,5 +1,7 @@
 from datetime import date
 
+from werkzeug.security import generate_password_hash
+
 from app import app
 from db import db
 from models import Topic, Log, User
@@ -17,9 +19,9 @@ def seed_data():
         t3 = Topic(name="Python")
 
         #users
-        u1 = User(username = "user1", password="pass1")
-        u2 = User(username="user2", password="pass1")
-        u3 = User(username="user3", password="pass1")
+        u1 = User(username = "user1", password=generate_password_hash("pass1"))
+        u2 = User(username="caleb", password=generate_password_hash("pass2"))
+        u3 = User(username="user3", password=generate_password_hash("pass3"))
 
         #logs
 
