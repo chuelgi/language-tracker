@@ -14,3 +14,13 @@ class LogForm(FlaskForm):
 class TopicForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     submit = SubmitField("Add Topic")
+
+class RegistrationForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = StringField("Password", validators=[DataRequired()])
+    submit = SubmitField("Register")
+
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = StringField("Password", validators=[DataRequired()])
+    submit = SubmitField("Login")
