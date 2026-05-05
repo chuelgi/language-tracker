@@ -26,13 +26,21 @@ if db_url and db_url.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 db.init_app(app)
 
+
 print("DB URL:", db_url)
 
 from models import Topic, Log, User
+
+with app.app_context():
+    db.create_all()
 #flask login
 login_manager = LoginManager()
 login_manager.login_view = "login"
 login_manager.init_app(app)
+
+@app.route("/debug-db")
+def debug_db():
+    return str(db.engine)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -78,6 +86,7 @@ def register():
 
 @app.route("/")
 def index():
+    print("app is running")
     #all topics
     if current_user.is_authenticated:
         topics = (
