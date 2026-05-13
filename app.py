@@ -155,6 +155,11 @@ def get_topic_logs(topic_id):
     ).all()
 
     return render_template("lang.html", topic = topic, logs=logs)
+@app.route("/timer", methods=["GET","POST"])
+@login_required
+def timer():
+
+    return render_template("timer.html")
 
 
 if __name__ == '__main__':

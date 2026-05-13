@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+<script src="/static/timer.js"></script>
+{% block content %}
+
+<h1>Time Entry</h1>
+
+<div id="timer">
+    <h2 id="timer-display">00:00:00</h2>
+</div>
+
+<button onclick="startTime()">Start</button>
+<button onclick="">Pause</button>
+<button onclick="">Stop and Save</button>
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='timer.js') }}"></script>
+{% endblock %}
+
+{% endblock %}
+
