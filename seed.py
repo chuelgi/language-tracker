@@ -1,3 +1,4 @@
+import os
 from datetime import date
 
 from werkzeug.security import generate_password_hash
@@ -34,6 +35,7 @@ def seed_data():
         db.session.commit()
 
         print("ending seed...")
+
 
 if __name__ == "__main__":
     seed_data()

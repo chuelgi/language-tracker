@@ -53,7 +53,7 @@
 
 <nav>
     <a href="{{ url_for('index') }}">Dashboard</a>
-    <a href="{{ url_for('add_language') }}">Add Language</a>
+    <a href="{{ url_for('add_topic') }}">Add Topic</a>
     <a href="{{ url_for('add_log') }}">Add Log</a>
     {% if current_user.is_authenticated %}
         <a href="{{ url_for('logout') }}">

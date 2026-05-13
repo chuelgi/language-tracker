@@ -7,6 +7,7 @@ from flask_login import current_user
 from jinja2.compiler import generate
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 load_dotenv()
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField
@@ -20,6 +21,8 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 db.init_app(app)
+
+
 
 with app.app_context():
     db.create_all()
@@ -87,9 +90,9 @@ def index():
 
     return render_template("dashboard.html", topics=topics)
 
-@app.route("/add-language", methods=["GET", "POST"])
+@app.route("/add-topic", methods=["GET", "POST"])
 @login_required
-def add_language():
+def add_topic():
     form =TopicForm()
     if form.validate_on_submit():
         subject = Topic(name = form.name.data)
@@ -98,7 +101,7 @@ def add_language():
        #flash("Topic Registered")
         return redirect("/")
 
-    return render_template("add_language.html", form = form)
+    return render_template("add_topic.html", form = form)
 
 @app.route("/add-log", methods=["GET", "POST"])
 @login_required
