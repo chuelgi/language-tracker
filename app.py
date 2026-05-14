@@ -16,7 +16,7 @@ from flask import Flask, render_template, request, redirect, jsonify
 from models import Topic, Log, User
 from db import db
 from forms import TopicForm, LogForm, RegistrationForm, LoginForm
-
+from sqlalchemy import func
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -77,8 +77,8 @@ def register():
 
 @app.route("/")
 def index():
-    #all topics
     if current_user.is_authenticated:
+
         topics = (
             db.session.query(Topic)
             .join(Log)
@@ -86,11 +86,34 @@ def index():
             .distinct()
             .all()
         )
+
+        results = db.session.query(
+            Topic.name,
+            func.sum(Log.duration)
+        ).join(Topic).filter(
+            Log.user_id == current_user.id
+        ).group_by(Topic.name).all()
+
     else:
         topics = Topic.query.all()
+        results = []
 
-    return render_template("dashboard.html", topics=topics)
+    # 🔥 COMMUNITY STATS (always computed)
+    community_results = db.session.query(
+        Topic.name,
+        func.sum(Log.duration)
+    ).join(Topic).group_by(Topic.name).all()
 
+    # convert to JSON-safe
+    results = [(r[0], r[1]) for r in results]
+    community_results = [(r[0], r[1]) for r in community_results]
+
+    return render_template(
+        "dashboard.html",
+        topics=topics,
+        results=results,
+        community_results=community_results
+    )
 @app.route("/add-topic", methods=["GET", "POST"])
 @login_required
 def add_topic():
@@ -138,6 +161,8 @@ def show_logs():
 
     logs = Log.query.filter_by(user_id = current_user.id)
 
+
+
     return render_template("logs.html", logs=logs)
 
 @app.route("/delete-log/<int:log_id>", methods=["GET", "POST"])
@@ -154,6 +179,9 @@ def get_topic_logs(topic_id):
         topic_id=topic_id,
         user_id=current_user.id
     ).all()
+
+    for log in logs:
+        log.hours = round(log.duration / 3600,2)
 
     return render_template("lang.html", topic = topic, logs=logs)
 @app.route("/timer", methods=["GET"])

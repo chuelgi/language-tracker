@@ -2,9 +2,10 @@
 
 {% block content %}
 
-<h1> Topics users are studying:</h1>
 {% if current_user.is_authenticated %}
-    <p> welcome {{ current_user.username }}</p>
+<h1> Hi {{ current_user.username }} !</h1>
+    <h2> Your Topics</h2>
+
     <ul>
     {% for topic in topics %}
         <li>
@@ -12,10 +13,16 @@
                 {{ topic.name }}
             </a>
         </li>
-        {% endfor %}
+    {% endfor %}
     </ul>
 
+    <!-- USER CHART -->
+    <h2>Your Study Stats</h2>
+    <canvas id="userChart"></canvas>
+
 {% else %}
+<h1>Topics the community is studying:</h1>
+
 <ul>
     {% for topic in topics %}
     <li>
@@ -23,5 +30,49 @@
     </li>
     {% endfor %}
 </ul>
+
 {% endif %}
+
+<!-- COMMUNITY SECTION (OUTSIDE LOGIN CHECK) -->
+<h2>Community Stats</h2>
+<canvas id="communityChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // ---------------- COMMUNITY CHART ----------------
+    const communityData = {{ community_results | tojson }};
+    const communityLabels = communityData.map(x => x[0]);
+    const communityValues = communityData.map(x => x[1] / 3600);
+
+    new Chart(document.getElementById("communityChart"), {
+        type: "pie",
+        data: {
+            labels: communityLabels,
+            datasets: [{
+                data: communityValues
+            }]
+        }
+    });
+
+    {% if current_user.is_authenticated %}
+
+    // ---------------- USER CHART ----------------
+    const userData = {{ results | tojson }};
+    const userLabels = userData.map(x => x[0]);
+    const userValues = userData.map(x => x[1] / 3600);
+
+    new Chart(document.getElementById("userChart"), {
+        type: "pie",
+        data: {
+            labels: userLabels,
+            datasets: [{
+                data: userValues
+            }]
+        }
+    });
+
+    {% endif %}
+</script>
+
 {% endblock %}
