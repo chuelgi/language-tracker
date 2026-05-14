@@ -12,10 +12,11 @@ load_dotenv()
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField
 from wtforms.validators import DataRequired
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 from models import Topic, Log, User
 from db import db
-from forms import TopicForm, LogForm,RegistrationForm, LoginForm
+from forms import TopicForm, LogForm, RegistrationForm, LoginForm
+
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -155,12 +156,24 @@ def get_topic_logs(topic_id):
     ).all()
 
     return render_template("lang.html", topic = topic, logs=logs)
-@app.route("/timer", methods=["GET","POST"])
+@app.route("/timer", methods=["GET"])
 @login_required
 def timer():
+    topics = Topic.query.all()
 
-    return render_template("timer.html")
+    return render_template('timer.html', topics = topics)
 
+@app.route("/save-session", methods=["POST"])
+@login_required
+def save_session():
+    data = request.get_json()
+    topic_id = data["topic_id"]
+    duration = data["duration"]
+
+    log = Log(user_id=current_user.id,topic_id=topic_id, duration=duration)
+    db.session.add(log)
+    db.session.commit()
+    return jsonify({"status": "ok"})
 
 if __name__ == '__main__':
     app.run(debug=True)

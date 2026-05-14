@@ -9,9 +9,22 @@
     <h2 id="timer-display">00:00:00</h2>
 </div>
 
+<div>
+    <h2>Subject</h2>
+
+    <select id ="subject">
+        {% for topic in topics %}
+
+        <option value="{{ topic.id }}">{{ topic.name }}</option>
+
+        {% endfor %}
+    </select>
+
+</div>
+
 <button onclick="startTime()">Start</button>
-<button onclick="">Pause</button>
-<button onclick="">Stop and Save</button>
+<button onclick="pauseTime()">Pause</button>
+<button onclick="StopAndSaveSession()">Stop and Save</button>
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='timer.js') }}"></script>
