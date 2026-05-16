@@ -8,8 +8,7 @@
 <ul>
 
     <li>
-        <a href="{{ url_for('get_log', log_id= log.id) }}">{{ log.title }}</a>
-
+        <a href="{{ url_for('get_log', log_id= log.id) }}">{{ log.title }} - {{ log.hours }}hrs</a>
     </li>
 </ul>
 

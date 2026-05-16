@@ -12,10 +12,10 @@ load_dotenv()
 from flask_wtf import FlaskForm
 from wtforms import StringField,SubmitField
 from wtforms.validators import DataRequired
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, url_for
 from models import Topic, Log, User
 from db import db
-from forms import TopicForm, LogForm, RegistrationForm, LoginForm
+from forms import TopicForm, LogForm, RegistrationForm, LoginForm, EditLogForm, DeleteLogForm
 from sqlalchemy import func
 app = Flask(__name__)
 
@@ -163,10 +163,15 @@ def show_logs():
     logs = Log.query.filter_by(user_id = current_user.id)
     return render_template("logs.html", logs=logs)
 
-@app.route("/delete-log/<int:log_id>", methods=["GET", "POST"])
+@app.route("/log/<int:log_id>/delete", methods=["POST"])
 def delete_log(log_id):
 
-    return redirect("/")
+    log = Log.query.get(log_id)
+    topic_id = log.topic_id
+    db.session.delete(log)
+    db.session.commit()
+
+    return redirect(url_for("get_topic_logs",topic_id = topic_id))
 
 @app.route("/topic/<int:topic_id>")
 @login_required
@@ -178,19 +183,43 @@ def get_topic_logs(topic_id):
         user_id=current_user.id
     ).all()
 
+    #convert secs into hours
     for log in logs:
         log.hours = round(log.duration / 3600,2)
 
-    return render_template("lang.html", topic = topic, logs=logs)
+    return render_template("topics.html", topic = topic, logs=logs)
 
 #log details and editing page
 @app.route("/log/<int:log_id>", methods = ["GET", "POST"])
 @login_required
 def get_log(log_id):
-    log = Log.query.filter_by(
-        id=log_id
-    ).all()
-    return render_template("log.html", logs=log)
+
+    log = Log.query.get_or_404(log_id)
+
+    deleteForm = DeleteLogForm()
+    form = EditLogForm()
+
+    if request.method == "GET":
+        form.title.data = log.title
+        form.duration.data = log.duration
+        form.context.data = log.context
+
+    if form.validate_on_submit():
+        log.title = form.title.data
+        print(log.title)
+
+        log.duration = form.duration.data
+        print(log.duration)
+
+        log.context = form.context.data
+        print(form.context)
+
+        db.session.commit()
+        return redirect("/")
+
+        #convert to hours
+
+    return render_template("log.html", log=log, form = form, deleteForm=deleteForm)
 
 
 @app.route("/timer", methods=["GET"])
