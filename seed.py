@@ -19,6 +19,7 @@ def seed_data():
         t2 =Topic(name = "Japanese")
         t3 = Topic(name="Python")
         t4 = Topic(name="Java")
+        t5 = Topic(name="JavaScript")
 
         #users
         u1 = User(username = "user1", password=generate_password_hash("pass1"))
