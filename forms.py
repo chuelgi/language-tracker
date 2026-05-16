@@ -6,10 +6,20 @@ from wtforms.validators import DataRequired
 
 class LogForm(FlaskForm):
     topic = SelectField("Topic", coerce=int)
+    title = StringField("Title")
     duration = IntegerField("duration", validators=[DataRequired()])
     context = StringField("Description")
     new_topic = StringField("Or create new topic")
     submit = SubmitField("Add Log")
+
+class EditLogForm(FlaskForm):
+    title = StringField("Title")
+    duration = IntegerField("Enter duration")
+    context  =StringField("Description")
+    submit = SubmitField("Save Log")
+
+class DeleteLogForm(FlaskForm):
+    submit = SubmitField("Delete Log")
 
 class TopicForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
