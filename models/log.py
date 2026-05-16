@@ -5,6 +5,7 @@ from db import db
 class Log(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     duration = db.Column(db.Integer) #seconds
+    title = db.Column(db.String(255), nullable = False, default="Unnamed Log")
     context = db.Column(db.String(255))
     time_stamp = db.Column(db.Date,default = datetime.now())
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable = False)

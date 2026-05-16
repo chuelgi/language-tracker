@@ -114,6 +114,7 @@ def index():
         results=results,
         community_results=community_results
     )
+
 @app.route("/add-topic", methods=["GET", "POST"])
 @login_required
 def add_topic():
@@ -160,9 +161,6 @@ def add_log():
 def show_logs():
 
     logs = Log.query.filter_by(user_id = current_user.id)
-
-
-
     return render_template("logs.html", logs=logs)
 
 @app.route("/delete-log/<int:log_id>", methods=["GET", "POST"])
@@ -184,6 +182,17 @@ def get_topic_logs(topic_id):
         log.hours = round(log.duration / 3600,2)
 
     return render_template("lang.html", topic = topic, logs=logs)
+
+#log details and editing page
+@app.route("/log/<int:log_id>", methods = ["GET", "POST"])
+@login_required
+def get_log(log_id):
+    log = Log.query.filter_by(
+        id=log_id
+    ).all()
+    return render_template("log.html", logs=log)
+
+
 @app.route("/timer", methods=["GET"])
 @login_required
 def timer():

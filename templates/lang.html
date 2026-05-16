@@ -4,10 +4,14 @@
 
 <h1>{{ topic.name }}</h1>
 
-
 {% for log in logs %}
+<ul>
 
-<p1> {{ log.context }} {{ log.hours }}</p1>
+    <li>
+        <a href="{{ url_for('get_log', log_id= log.id) }}">{{ log.title }}</a>
+
+    </li>
+</ul>
 
 {% endfor %}
 
