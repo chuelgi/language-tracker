@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from sqlalchemy import Integer, String
 from wtforms import IntegerField, StringField, SubmitField, SelectField
+from wtforms.fields.simple import PasswordField
 from wtforms.validators import DataRequired
 
 
@@ -27,10 +28,10 @@ class TopicForm(FlaskForm):
 
 class RegistrationForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Register")
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
-    password = StringField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Login")
