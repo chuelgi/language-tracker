@@ -52,6 +52,28 @@
 {% endblock %}
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+
+    const audio = document.getElementById("loginSound");
+
+    if (!audio) return;
+
+    audio.volume = 0.5;
+
+    // Try autoplay
+    audio.play().catch(() => {
+        console.log("Autoplay blocked — waiting for interaction");
+
+        // fallback: play on first click
+        document.addEventListener("click", () => {
+            audio.play();
+        }, { once: true });
+
+    });
+
+});
+</script>
 
 </body>
 </html>
