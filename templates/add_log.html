@@ -2,30 +2,59 @@
 
 {% block content %}
 
-<h1>Add Log</h1>
-<form method="POST">
-    {{ form.hidden_tag() }}
+<div class="form-page">
 
-    <p>
-        {{ form.duration.label }}<br>
-        {{ form.duration() }}
-    </p>
+    <div class="form-card">
 
-    <p>
-        {{ form.topic.label }}<br>
-        {{ form.topic() }}
-    </p>
+        <h1 class="form-title">
+            Add Log ✨
+        </h1>
 
-    <p>
-        {{ form.new_topic.label }}<br>
-        {{ form.new_topic() }}
-    </p>
+        <form method="POST" class="study-form">
 
-    <p>
-        {{ form.context.label }}<br>
-        {{ form.context() }}
-    </p>
+            {{ form.hidden_tag() }}
 
-    {{ form.submit() }}
+            <div class="form-group">
+
+                {{ form.title.label(class="form-label") }}
+
+                {{ form.title(class="form-input") }}
+
+            </div>
+
+            <div class="form-group">
+
+                {{ form.duration.label(class="form-label") }}
+
+                {{ form.duration(class="form-input") }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                {{ form.topic.label(class="form-label") }}
+
+                {{ form.topic(class="form-select") }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                {{ form.context.label(class="form-label") }}
+
+                {{ form.context(class="form-input") }}
+
+            </div>
+
+
+            {{ form.submit(class="submit-btn") }}
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

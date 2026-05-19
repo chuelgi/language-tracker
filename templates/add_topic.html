@@ -1,21 +1,32 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Add Topic</h1>
 
-<form method="POST">
-    {{ form.hidden_tag() }}
+<div class="form-page">
 
-    <p>
-        {{ form.name.label }}<br>
-        {{ form.name() }}
-    </p>
+    <div class="form-card">
 
-    <p>
-        {{ form.submit() }}
-    </p>
+        <h1 class="form-title">
+            Add Topic 📚
+        </h1>
 
-</form>
+        <form method="POST" class="study-form">
 
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.name.label(class="form-label") }}
+
+                {{ form.name(class="form-input") }}
+            </div>
+
+
+            {{ form.submit(class="submit-btn") }}
+
+        </form>
+
+    </div>
+
+</div>
 
 {% endblock %}

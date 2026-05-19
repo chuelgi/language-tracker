@@ -100,7 +100,7 @@ def index():
         topics = Topic.query.all()
         results = []
 
-    # 🔥 COMMUNITY STATS (always computed)
+    # COMMUNITY STATS (always computed)
     community_results = db.session.query(
         Topic.name,
         func.sum(Log.duration)
@@ -108,14 +108,21 @@ def index():
 
     # convert to JSON-safe
     results = [(r[0], r[1]) for r in results]
+    user_total = sum(r[1] for r in results)
+    user_hours = round(user_total / 3600, 2)
+
     community_results = [(r[0], r[1]) for r in community_results]
+    total_community_hours = sum(r[1] for r in community_results)
+    community_hours = round(total_community_hours / 3600, 2)
 
     return render_template(
         "dashboard.html",
         topics=topics,
         results=results,
-        community_results=community_results
-    )
+        user_hours = user_hours,
+        community_results=community_results,
+        community_hours=community_hours
+        )
 
 @app.route("/add-topic", methods=["GET", "POST"])
 @login_required

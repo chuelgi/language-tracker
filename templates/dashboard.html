@@ -2,77 +2,72 @@
 
 {% block content %}
 
-{% if current_user.is_authenticated %}
-<h1> Hi {{ current_user.username }} !</h1>
-    <h2> Your Topics</h2>
-
-    <ul>
-    {% for topic in topics %}
-        <li>
-            <a href="{{ url_for('get_topic_logs', topic_id=topic.id) }}">
-                {{ topic.name }}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-
-    <!-- USER CHART -->
-    <h2>Your Study Stats</h2>
-    <canvas id="userChart"></canvas>
-
-{% else %}
-<h1>Topics the community is studying:</h1>
-
-<ul>
-    {% for topic in topics %}
-    <li>
-        {{ topic.name }}
-    </li>
-    {% endfor %}
-</ul>
-
-{% endif %}
-
-<!-- COMMUNITY SECTION (OUTSIDE LOGIN CHECK) -->
-<h2>Community Stats</h2>
-<canvas id="communityChart"></canvas>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-    // ---------------- COMMUNITY CHART ----------------
-    const communityData = {{ community_results | tojson }};
-    const communityLabels = communityData.map(x => x[0]);
-    const communityValues = communityData.map(x => x[1] / 3600);
-
-    new Chart(document.getElementById("communityChart"), {
-        type: "pie",
-        data: {
-            labels: communityLabels,
-            datasets: [{
-                data: communityValues
-            }]
-        }
-    });
+<!-- DASHBOARD -->
+<main id="dashboard" class="page max-w-6xl mx-auto px-6 pt-28 pb-10">
 
     {% if current_user.is_authenticated %}
+    <div class="hero">
+        <h2>Welcome Back 👋</h2>
+        <p>Track your study sessions and stay consistent.</p>
+    </div>
 
-    // ---------------- USER CHART ----------------
-    const userData = {{ results | tojson }};
-    const userLabels = userData.map(x => x[0]);
-    const userValues = userData.map(x => x[1] / 3600);
+    <!-- user stats -->
 
-    new Chart(document.getElementById("userChart"), {
-        type: "pie",
-        data: {
-            labels: userLabels,
-            datasets: [{
-                data: userValues
-            }]
-        }
-    });
+    <div class="grid-cards">
 
-    {% endif %}
+        <div class="card">
+            <p>Study Hours</p>
+            <h3>{{ user_hours }}</h3>
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="grid-cards">
+
+        <div class="card">
+            <p>Study Hours</p>
+            <h3>{{ community_hours }}</h3>
+        </div>
+
+        <div class="card">
+            <p>Current Streak</p>
+            <h3>7 Days</h3>
+        </div>
+
+        <div class="card">
+            <p>Logs Added</p>
+            <h3>128</h3>
+        </div>
+
+    </div>
+{% endif %}
+
+    <section class="logs">
+        <h3>Recent Logs</h3>
+
+        <div class="log-item">
+            <div>
+                <h4>Spanish Listening</h4>
+                <p>Today</p>
+            </div>
+            <span>1h 20m</span>
+        </div>
+
+        <div class="log-item">
+            <div>
+                <h4>Python Flask</h4>
+                <p>Yesterday</p>
+            </div>
+            <span>2h 10m</span>
+        </div>
+
+    </section>
+
+</main>
+
+
 </script>
 
 {% endblock %}
