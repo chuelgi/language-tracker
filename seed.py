@@ -25,6 +25,7 @@ def seed_data():
         u1 = User(username = "user1", password=generate_password_hash("pass1"))
         u2 = User(username="caleb", password=generate_password_hash("pass2"))
         u3 = User(username="user3", password=generate_password_hash("pass3"))
+        u4 = User(username="chris", password=generate_password_hash("sylus"))
 
         #logs
 
@@ -34,9 +35,10 @@ def seed_data():
 
         l2 = Log(duration=4000, title= "Java documentary", context="Watched a movie",time_stamp = date.today(), user=u2, topic=t4)
         l3 = Log(duration=5000, context="Practiced",time_stamp = date.today(), user_id=1, topic_id=1)
+        l4 = Log(duration=10000, title="Read book", context="harry potter", time_stamp = date.today(), user=u4, topic=t2)
         db.create_all()
 
-        db.session.add_all([t1, t2, t3, u1, u2, u3, l1, l2, l3, l12, l13])
+        db.session.add_all([t1, t2, t3, u1, u2, u3, l1, l2, l3, l12, l13, u4, l4])
         db.session.commit()
 
         print("ending seed...")
