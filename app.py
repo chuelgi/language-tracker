@@ -80,49 +80,61 @@ def register():
 @app.route("/")
 def index():
     if current_user.is_authenticated:
+        last_logs, user_hours = get_user_data(current_user.id)
 
-        topics = (
-            db.session.query(Topic)
-            .join(Log)
-            .filter(Log.user_id == current_user.id)
-            .distinct()
-            .all()
+        return render_template(
+            "dashboard.html",
+            last_logs=last_logs,
+            user_hours=user_hours,
+            show_community=False
         )
-
-        results = db.session.query(
-            Topic.name,
-            func.sum(Log.duration)
-        ).join(Topic).filter(
-            Log.user_id == current_user.id
-        ).group_by(Topic.name).all()
 
     else:
-        topics = Topic.query.all()
-        results = []
+        community_results, community_hours = get_community_data()
 
-    # COMMUNITY STATS (always computed)
-    community_results = db.session.query(
-        Topic.name,
-        func.sum(Log.duration)
-    ).join(Topic).group_by(Topic.name).all()
-
-    # convert to JSON-safe
-    results = [(r[0], r[1]) for r in results]
-    user_total = sum(r[1] for r in results)
-    user_hours = round(user_total / 3600, 2)
-
-    community_results = [(r[0], r[1]) for r in community_results]
-    total_community_hours = sum(r[1] for r in community_results)
-    community_hours = round(total_community_hours / 3600, 2)
-
-    return render_template(
-        "dashboard.html",
-        topics=topics,
-        results=results,
-        user_hours = user_hours,
-        community_results=community_results,
-        community_hours=community_hours
+        return render_template(
+            "dashboard.html",
+            last_logs=[],
+            user_hours=0,
+            community_results=community_results,
+            community_hours=community_hours,
+            show_community=True
         )
+def get_user_data(user_id):
+
+
+    last_logs = (
+        Log.query
+        .filter(Log.user_id == user_id)
+        .order_by(Log.time_stamp.desc())
+        .limit(5)
+        .all()
+    )
+
+    total_seconds = db.session.query(func.sum(Log.duration)).filter(
+        Log.user_id == user_id
+    ).scalar() or 0
+
+    user_hours = round(total_seconds / 3600, 2)
+
+    return last_logs, user_hours
+
+def get_community_data():
+    results_raw = (
+        db.session.query(
+            Topic.name,
+            func.sum(Log.duration)
+        )
+        .join(Log)
+        .group_by(Topic.name)
+        .all()
+    )
+
+    results = [(name, duration or 0) for name, duration in results_raw]
+    total_seconds = sum(duration or 0 for _, duration in results)
+    community_hours = round(total_seconds / 3600, 2)
+
+    return results, community_hours
 
 @app.route("/add-topic", methods=["GET", "POST"])
 @login_required
@@ -166,11 +178,16 @@ def add_log():
     return render_template("add_log.html", form=form)
 
 
-@app.route("/logs")
-def show_logs():
-
-    logs = Log.query.filter_by(user_id = current_user.id)
-    return render_template("logs.html", logs=logs)
+@app.route("/topics/")
+def show_topics():
+    topics = (
+        db.session.query(Topic)
+        .join(Log)
+        .filter(Log.user_id == current_user.id)
+        .distinct()
+        .all()
+    )
+    return render_template("my_topics.html", topics=topics)
 
 @app.route("/log/<int:log_id>/delete", methods=["POST"])
 def delete_log(log_id):

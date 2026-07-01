@@ -1,15 +1,29 @@
 
 
 //template code
-function toggleTheme(){
-  document.documentElement.classList.toggle('dark');
+function applyTheme() {
+  const theme = localStorage.getItem("theme");
 
-  const btn = document.getElementById('themeBtn');
-  const isDark = document.documentElement.classList.contains('dark');
+  const isDark =
+    theme === "dark" ||
+    (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-  btn.innerText = isDark ? '☀️' : '🌙';
+  document.documentElement.classList.toggle("dark", isDark);
+
+  const btn = document.getElementById("themeBtn");
+  if (btn) btn.innerText = isDark ? "☀️" : "🌙";
 }
 
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle("dark");
+
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+
+  const btn = document.getElementById("themeBtn");
+  if (btn) btn.innerText = isDark ? "☀️" : "🌙";
+}
+
+applyTheme();
 //timer
 
 let count = 0;

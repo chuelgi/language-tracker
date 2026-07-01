@@ -3,13 +3,9 @@
 {% block content %}
 
 <!-- DASHBOARD -->
-<main id="dashboard" class="page max-w-6xl mx-auto px-6 pt-28 pb-10">
+<main id="dashboard" class="page w-full px-6 pt-28 pb-10">
 
     {% if current_user.is_authenticated %}
-
-        {% if current_user.username == "chris" %}
-                <audio id="loginSound" src="{{ url_for('static', filename='Sylus.mp3') }}"></audio>
-        {% endif %}
 
     <div class="hero">
         <h2>Welcome Back 👋</h2>
@@ -24,8 +20,20 @@
             <p>Study Hours</p>
             <h3>{{ user_hours }}</h3>
         </div>
-
     </div>
+
+       <section class="logs">
+        <h3>Recent Logs</h3>
+        {% for log in last_logs %}
+        <div class="log-item">
+            <div>
+                <h4>{{ log.title }}</h4>
+                <p>{{ log.time_stamp }}</p>
+            </div>
+            <span>{{ (log.duration / 3600) | round(2) }} hrs</span>
+        </div>
+           {% endfor %}
+    </section>
 
     {% else %}
 
@@ -49,26 +57,6 @@
     </div>
 {% endif %}
 
-    <section class="logs">
-        <h3>Recent Logs</h3>
-
-        <div class="log-item">
-            <div>
-                <h4>Spanish Listening</h4>
-                <p>Today</p>
-            </div>
-            <span>1h 20m</span>
-        </div>
-
-        <div class="log-item">
-            <div>
-                <h4>Python Flask</h4>
-                <p>Yesterday</p>
-            </div>
-            <span>2h 10m</span>
-        </div>
-
-    </section>
 
 </main>
 
