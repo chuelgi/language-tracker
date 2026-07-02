@@ -145,7 +145,7 @@ def add_topic():
         db.session.add(subject)
         db.session.commit()
        #flash("Topic Registered")
-        return redirect("/")
+        return redirect(url_for("add_log"))
 
     return render_template("add_topic.html", form = form)
 
