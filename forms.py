@@ -2,20 +2,25 @@ from flask_wtf import FlaskForm
 from sqlalchemy import Integer, String
 from wtforms import IntegerField, StringField, SubmitField, SelectField
 from wtforms.fields.simple import PasswordField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Optional, NumberRange
 
 
 class LogForm(FlaskForm):
     topic = SelectField("Topic", coerce=int)
     title = StringField("Title")
-    duration = IntegerField("duration", validators=[DataRequired()])
+
+    hours = IntegerField("Hours", validators=[Optional(), NumberRange(min=0)])
+    minutes = IntegerField("Minutes", validators=[Optional(), NumberRange(min=0, max=59)])
+
     context = StringField("Description")
     new_topic = StringField("Or create new topic")
     submit = SubmitField("Add Log")
 
 class EditLogForm(FlaskForm):
     title = StringField("Title")
-    duration = IntegerField("Enter duration")
+    hours = IntegerField("Hours", validators=[Optional(), NumberRange(min=0)])
+    minutes = IntegerField("Minutes", validators=[Optional(), NumberRange(min=0, max=59)])
+
     context  =StringField("Description")
     submit = SubmitField("Save Log")
 

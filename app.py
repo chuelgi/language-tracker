@@ -157,6 +157,20 @@ def add_log():
 
     form.topic.choices = [(t.id, t.name) for t in Topic.query.all()]
 
+    # PRE-FILL FROM TIMER
+    topic_id = request.args.get("topic_id")
+    duration = request.args.get("duration")
+
+    if request.method == "GET":
+        if topic_id:
+            form.topic.data = int(topic_id)
+
+        if duration:
+            duration = int(duration)
+
+            form.hours.data = duration // 3600
+            form.minutes.data = (duration % 3600) // 60
+
     if form.validate_on_submit():
         if form.new_topic.data:
             topic = Topic(name=form.new_topic.data)
@@ -165,11 +179,19 @@ def add_log():
         else:
             topic = Topic.query.get(form.topic.data)
 
+        # convert time properly
+        hours = form.hours.data or 0
+        minutes = form.minutes.data or 0
+
+        total_seconds = (hours * 3600) + (minutes * 60)
+
         new_log = Log(
-            duration=form.duration.data,
+            title=form.title.data,
+            duration=total_seconds,
             context=form.context.data,
             user_id=current_user.id,
             topic_id=topic.id)
+
 
         db.session.add(new_log)
         db.session.commit()
@@ -227,18 +249,24 @@ def get_log(log_id):
 
     if request.method == "GET":
         form.title.data = log.title
-        form.duration.data = log.duration
         form.context.data = log.context
 
-    if form.validate_on_submit():
-        log.title = form.title.data
-        print(log.title)
+        form.hours.data = log.duration // 3600
+        form.minutes.data = (log.duration % 3600) // 60
 
-        log.duration = form.duration.data
-        print(log.duration)
+
+    if form.validate_on_submit():
+        hours = form.hours.data or 0
+        minutes = form.minutes.data or 0
+
+
+        log.title = form.title.data
+
+
+        log.duration = (hours * 3600) + (minutes * 60)
 
         log.context = form.context.data
-        print(form.context)
+
 
         db.session.commit()
         return redirect("/")

@@ -56,32 +56,19 @@ function stopTime(){
     document.getElementById("time").innerText = "00:00:00"
 }
 
-async function StopAndSaveSession() {
-    let topicID = document.getElementById("subject").value;
+function StopAndSaveSession() {
     let duration = count;
 
-        //send to flask
-    fetch("/save-session", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            topic_id: topicID,
-            duration: duration
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        console.log("Saved:", data);
-    });
+    // stop timer
+    clearInterval(intervalID);
+    intervalID = null;
+    count = 0;
 
-    //stop and reset timer
-    clearInterval(intervalID)
-    intervalID = null
-    count = 0
+    document.getElementById("time").innerText = "00:00:00";
 
-    document.getElementById("time").innerText = "00:00:00"
+    // redirect to Flask form with data
+    window.location.href =
+        `/add-log?duration=${duration}`;
 }
 
 function formatTime(totalSeconds){
