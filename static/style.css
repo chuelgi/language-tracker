@@ -352,3 +352,9 @@
 
   opacity:0.95;
 }
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
